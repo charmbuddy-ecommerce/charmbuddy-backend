@@ -18,6 +18,7 @@ Route::get('/user', function (Request $request) {
 // AuthController
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::get('/users_index', [AuthController::class, 'index']);
 
 // ProductsController
 Route::get('/products_index', [ProductController::class, 'index']);
@@ -46,7 +47,9 @@ Route::prefix('shipping')->group(function () {
     Route::post('/cost', [ShippingController::class, 'cost']);
 });
 
+// FaqController
 Route::get('/faqs', [FaqController::class, 'index']);
+Route::post('/faqs_store', [FaqController::class, 'store']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);

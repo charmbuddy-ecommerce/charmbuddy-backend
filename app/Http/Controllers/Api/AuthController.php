@@ -100,4 +100,13 @@ class AuthController extends Controller
             'message' => 'Logout berhasil.'
         ]);
     }
+
+    /**
+     * INDEX: Mengambil semua user dari database
+     */
+    public function index()
+    {
+        $users = User::all();
+        return response()->json($users);
+    }
 }
