@@ -5,7 +5,6 @@ use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\CheckoutController;
 use App\Http\Controllers\Api\FaqController;
-use App\Http\Controllers\Api\OrderStatusController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\ShippingController;
 use App\Http\Controllers\Api\AddressController;
@@ -90,10 +89,4 @@ Route::middleware('auth:sanctum')->group(function () {
     // Bayar atau Upload Bukti, PaymentController
     // URL: /api/orders/1/pay
     Route::post('/orders/{id}/pay', [PaymentController::class, 'store']);
-
-    Route::prefix('admin')->middleware('admin')->group(function () {
-        Route::put('/orders/{orderId}/approve', [OrderStatusController::class, 'approve']);
-        Route::put('/orders/{orderId}/reject', [OrderStatusController::class, 'reject']);
-        Route::put('/orders/{orderId}/ship', [OrderStatusController::class, 'ship']);
-    });
 });
