@@ -9,9 +9,11 @@ use App\Http\Controllers\Api\OrderStatusController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\ShippingController;
 use App\Http\Controllers\Api\AddressController;
+use App\Http\Controllers\Api\PaymentController;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Laravel\Sanctum\Sanctum;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -52,7 +54,9 @@ Route::prefix('shipping')->group(function () {
 Route::get('/faqs', [FaqController::class, 'index']);
 Route::post('/faqs_store', [FaqController::class, 'store']);
 
+// Blok Sanctum
 // Yang di dalem blok ini hanya bisa dipake kalo user udah login
+// Kalo mau testing di ThunderClient, masukin token nya di bagian Auth, Bearer
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/auth/logout', [AuthController::class, 'logout']);
@@ -76,11 +80,16 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/{itemId}', [CartController::class, 'destroy']);
     });
 
+    // Proses Beli, CheckoutController
     Route::post('/checkout', [CheckoutController::class, 'store']);
-    Route::post('/orders/{orderId}/payment-proof', [CheckoutController::class, 'uploadPaymentProof']);
+
+    // Lihat riwayat order, OrderController
     Route::get('/orders', [CheckoutController::class, 'index']);
     Route::get('/orders/{orderId}', [CheckoutController::class, 'show']);
-    Route::get('/orders/{orderId}/status', [OrderStatusController::class, 'status']);
+
+    // Bayar atau Upload Bukti, PaymentController
+    // URL: /api/orders/1/pay
+    Route::post('/orders/{id}/pay', [PaymentController::class, 'store']);
 
     Route::prefix('admin')->middleware('admin')->group(function () {
         Route::put('/orders/{orderId}/approve', [OrderStatusController::class, 'approve']);
