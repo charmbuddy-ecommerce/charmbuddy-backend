@@ -8,6 +8,8 @@ use App\Http\Controllers\Api\FaqController;
 use App\Http\Controllers\Api\OrderStatusController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\ShippingController;
+use App\Http\Controllers\Api\AddressController;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -39,8 +41,7 @@ Route::prefix('products')->group(function () {
     Route::get('/{id}', [ProductController::class, 'show']);
 });
 
-Route::get('/categories', [ProductController::class, 'categories']);
-
+// ShippingController
 Route::prefix('shipping')->group(function () {
     Route::get('/provinces', [ShippingController::class, 'provinces']);
     Route::get('/cities', [ShippingController::class, 'cities']);
@@ -51,6 +52,7 @@ Route::prefix('shipping')->group(function () {
 Route::get('/faqs', [FaqController::class, 'index']);
 Route::post('/faqs_store', [FaqController::class, 'store']);
 
+// Yang di dalem blok ini hanya bisa dipake kalo user udah login
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/auth/logout', [AuthController::class, 'logout']);
@@ -61,6 +63,11 @@ Route::middleware('auth:sanctum')->group(function () {
             'data' => $request->user(),
         ]);
     });
+
+    // AddressController
+    Route::get('/addresses', [AddressController::class, 'index']);
+    Route::post('/addresses', [AddressController::class, 'store']);
+    Route::get('/addresses/primary', [AddressController::class, 'primary_address']);
 
     Route::prefix('cart')->group(function () {
         Route::get('/', [CartController::class, 'show']);
