@@ -13,17 +13,15 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
-            
-            // Relasi ke Categories (PENTING: Tabel categories harus dibuat duluan)
-            $table->foreignId('category_id')->nullable()->constrained('categories')->nullOnDelete();
-            
             $table->string('name');
+            $table->string('slug')->unique(); // <--- BARIS INI JUGA WAJIB
             $table->text('description')->nullable();
-            $table->decimal('price', 12, 2);
+            $table->integer('price');
             $table->integer('stock')->default(0);
-            $table->integer('weight'); // Berat (Gram)
-            $table->string('image_path')->nullable();
-            
+
+            // Pastikan nama tabel di constrained() adalah 'categories'
+            $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
+
             $table->timestamps();
         });
     }
